@@ -1,13 +1,20 @@
 [Unit]
-Description=EarnApp Installer
+Description=EarnApp Runtime Installer
 Wants=network-online.target
 After=network-online.target
 
 [Service]
-Type=simple
-Restart=no
-ExecStart=/usr/bin/install
+Type=oneshot
 User=root
+# Load environment variables from /etc/earnapp/earnapp.conf if it exists
+EnvironmentFile=-/etc/earnapp/earnapp.conf
+ExecStart=/usr/bin/earnapp_entrypoint.sh
+RemainAfterExit=yes
+Restart=no
+
+# Ensure logs are visible in Docker logs
+StandardOutput=journal+console
+StandardError=journal+console
 
 [Install]
 WantedBy=multi-user.target
